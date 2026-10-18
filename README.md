@@ -13,6 +13,27 @@
 | `security-scan` | CodeQL + TruffleHog + Trivy | `uses: abhiachar126-s/workflow-lab/.github/workflows/security-scan.yml@main` |
 | `docker-build` | Multi-arch Docker build & push | `uses: abhiachar126-s/workflow-lab/.github/workflows/docker-build.yml@main` |
 
+<!-- X4-APEX-DIAGRAM-START:workflow-lab -->
+
+```mermaid
+flowchart LR
+    CONSUMER[Consumer Repository] --> SELECT[Choose Reusable Workflow]
+    SELECT --> PY[Python CI]
+    SELECT --> NODE[Node CI]
+    SELECT --> SEC[Security Scan]
+    SELECT --> DOCKER[Docker Build and Push]
+    PY --> CHECKS[Lint / Typecheck / Tests]
+    NODE --> CHECKS
+    SEC --> SARIF[Security Findings]
+    DOCKER --> ARTIFACT[Build Artifact]
+    CHECKS --> STATUS[Workflow Result]
+    SARIF --> STATUS
+    ARTIFACT --> STATUS
+    STATUS --> GATE[Consumer Branch Protection or Review Gate]
+```
+
+<!-- X4-APEX-DIAGRAM-END:workflow-lab -->
+
 ## 🚀 Quick Start
 
 ```yaml

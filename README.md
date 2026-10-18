@@ -62,3 +62,27 @@ docs/                 # Documentation
 ## 📜 License
 
 MIT © 2026 Arise GenOps
+
+## APEX Architecture Map
+
+> Status: architecture documentation; implementation and deployment claims require independent verification.
+
+```mermaid
+flowchart LR
+  Consumer[Sample consumer repository] --> Ref[Pin reusable workflow ref]
+  Ref --> Workflow[Reusable workflow]
+  Workflow --> Inputs[Validate declared inputs]
+  Inputs --> Runner[Execute isolated job steps]
+  Runner --> Artifact[Upload evidence artifact]
+  Artifact --> ConsumerCheck[Consumer contract test]
+  ConsumerCheck --> Result{Expected outputs and failure behavior?}
+  Result -->|no| Fail[Fail consumer CI]
+  Result -->|yes| Pass[Record compatible workflow version]
+  Workflow --> Permissions[Least-privilege token permissions]
+  Permissions --> Runner
+  Ref --> PinCheck{Ref immutable or reviewed tag?}
+  PinCheck -->|no| Warn[Flag supply-chain risk]
+  PinCheck -->|yes| Inputs
+```
+**Evidence note:** A reusable workflow is validated only when a real consumer exercises both success and failure paths on the pinned reference.
+
